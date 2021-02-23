@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
 
 /*
  TODO
- [ ] - Create New Task 
  [ ] - Create New Tag
  [ ] - Add time passed to timer
  [ ] - Add unit tests
@@ -87,7 +86,11 @@ const Home = () => {
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() => (
             <Button
-              onPress={() => {}}
+              onPress={() => {
+                setState({
+                  createNewTask: true,
+                })
+              }}
               textStyle={{
                 alignSelf: 'center',
                 fontSize: 20,
@@ -98,15 +101,25 @@ const Home = () => {
           )}
         />
         <View style={[styles.footer, {paddingBottom: bottom}]}>
-          <Button onPress={() => {}}>Create Task</Button>
+          <Button
+            onPress={() => {
+              setState({
+                createNewTask: true,
+              })
+            }}
+          >
+            Create Task
+          </Button>
         </View>
       </View>
       <NewTask
         visible={!!state.editingTaskId || state.createNewTask}
         task={data?.tasks.find((task) => task.id === state.editingTaskId)}
+        isEditing={!!state.editingTaskId}
         onClose={() =>
           setState({
             editingTaskId: undefined,
+            createNewTask: false,
           })
         }
       />

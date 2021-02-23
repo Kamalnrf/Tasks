@@ -8,10 +8,6 @@ import {
   Roboto_700Bold,
 } from '@expo-google-fonts/roboto'
 import AppLoading from 'expo-app-loading'
-import {
-  SafeAreaProvider,
-  initialWindowMetrics,
-} from 'react-native-safe-area-context'
 import AppProvider from './src/providers'
 
 const fonts = {
@@ -27,10 +23,8 @@ export default function App() {
 
   return (
     <AppProvider>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <StatusBar backgroundColor="#212227" style="light" />
-        <Home />
-      </SafeAreaProvider>
+      <StatusBar backgroundColor="#212227" style="light" />
+      <Home />
     </AppProvider>
   )
 }

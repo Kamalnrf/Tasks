@@ -1,7 +1,7 @@
 import {gql} from 'graphql-request'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 import graphQLClient from '../graphQLClient'
-import {Task} from '../types'
+import {Tag, Task} from '../types'
 
 const useTasks = () => {
   return useQuery('tasks', async () => {
@@ -91,4 +91,61 @@ const useMutationTask = () => {
   )
 }
 
-export {useTasks, useMutationTask}
+const useMutationInsertTask = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation(
+    async ({
+      task: {title},
+      tags,
+    }: {
+      task: Partial<Task>
+      tags: Array<Partial<Tag>>
+    }) => {
+      try {
+        const data: {
+          update_tasks: {
+            returning: Array<Task>
+          }
+        } = await graphQLClient.request(gql`
+          mutation {
+            insert_tasks(
+              objects: {
+                title: "${title}"
+                ${
+                  tags.length > 0
+                    ? `task_tags: {data: ${JSON.stringify(tags)}}`
+                    : ''
+                }
+              }
+            ) {
+              returning {
+                id
+                title
+                startTime: start_time
+                endTime: end_time
+                tags {
+                  id
+                  name
+                }
+              }
+            }
+          }
+        `)
+
+        return data.insert_tasks.returning[0]
+      } catch (err: unknown) {
+        return Promise.reject(err)
+      }
+    },
+    {
+      onSuccess: (newTask) => {
+        queryClient.setQueryData('tasks', (data) => ({
+          tasks: [...(data?.tasks ?? []), newTask],
+        }))
+      },
+    },
+  )
+}
+
+export {useTasks, useMutationTask, useMutationInsertTask}

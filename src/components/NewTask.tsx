@@ -7,7 +7,11 @@ import SelectTag from './SelectTag'
 import Tag from './Tag'
 import ArrowLeft from '../../assets/arrow-left.svg'
 import {TouchableOpacity} from 'react-native-gesture-handler'
-import {useMutationTask, useTasks} from '../hooks/useTasks'
+import {
+  useMutationInsertTask,
+  useMutationTask,
+  useTasks,
+} from '../hooks/useTasks'
 import Button from './Button'
 import {useMutationDeleteTaskTag} from '../hooks/useTags'
 
@@ -37,12 +41,14 @@ type Props = {
   visible: boolean
   task?: Task
   onClose: () => void
+  isEditing: boolean
 }
 
-const NewTask = ({visible, task, onClose}: Props) => {
-  const [title, setTitle] = useState(task?.title ?? '')
+const NewTask = ({visible, task, onClose, isEditing}: Props) => {
+  const [title, setTitle] = useState('')
   const [showAddTag, setShowAddTag] = useState(false)
   const mutateTask = useMutationTask()
+  const mutateInsertTask = useMutationInsertTask()
   const mutateTag = useMutationDeleteTaskTag()
 
   useEffect(() => {
@@ -55,7 +61,13 @@ const NewTask = ({visible, task, onClose}: Props) => {
     <>
       <BottomSheet>
         <>
-          <TouchableOpacity onPress={onClose} style={{marginBottom: 10}}>
+          <TouchableOpacity
+            onPress={() => {
+              onClose()
+              setTitle('')
+            }}
+            style={{marginBottom: 10}}
+          >
             <ArrowLeft />
           </TouchableOpacity>
           <TextInput
@@ -93,10 +105,19 @@ const NewTask = ({visible, task, onClose}: Props) => {
             <Button onPress={() => setShowAddTag(true)}>Add Tag</Button>
             <Button
               onPress={async () => {
-                await mutateTask.mutateAsync({
-                  ...task,
-                  title,
-                })
+                if (isEditing) {
+                  await mutateTask.mutateAsync({
+                    ...task,
+                    title,
+                  })
+                } else {
+                  await mutateInsertTask.mutateAsync({
+                    task: {
+                      title,
+                    },
+                    tags: [],
+                  })
+                }
                 onClose()
               }}
             >
