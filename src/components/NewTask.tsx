@@ -1,10 +1,16 @@
-import React, {useEffect, useState} from 'react'
-import {FlatList, StyleSheet, Text, View, TextInput} from 'react-native'
+import React, {useEffect, useReducer, useState} from 'react'
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Keyboard,
+} from 'react-native'
 import {colors} from '../constants'
-import {Task} from '../types'
+import {Tag as TTag, Task} from '../types'
 import BottomSheet from './BottomSheet'
-import SelectTag from './SelectTag'
-import Tag from './Tag'
+import SelectTag from './SelectTags'
 import ArrowLeft from '../../assets/arrow-left.svg'
 import {TouchableOpacity} from 'react-native-gesture-handler'
 import {
@@ -14,6 +20,8 @@ import {
 } from '../hooks/useTasks'
 import Button from './Button'
 import {useMutationDeleteTaskTag} from '../hooks/useTags'
+import SelectTags from './SelectTags'
+import Tag from './Tag'
 
 const styles = StyleSheet.create({
   buttonsContainer: {
@@ -38,24 +46,38 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  visible: boolean
   task?: Task
   onClose: () => void
   isEditing: boolean
 }
 
-const NewTask = ({visible, task, onClose, isEditing}: Props) => {
+type State = {
+  selectedTags: Array<TTag>
+  selectTag: boolean
+}
+
+const initialState: State = {
+  selectedTags: [],
+  selectTag: false,
+}
+
+const NewTask = ({task, onClose, isEditing}: Props) => {
   const [title, setTitle] = useState('')
-  const [showAddTag, setShowAddTag] = useState(false)
+  const [{selectedTags, selectTag}, setState] = useReducer(
+    (s: State, a: Partial<State>) => ({...s, ...a}),
+    initialState,
+  )
   const mutateTask = useMutationTask()
   const mutateInsertTask = useMutationInsertTask()
   const mutateTag = useMutationDeleteTaskTag()
 
   useEffect(() => {
     if (task?.title) setTitle(task.title)
+    if (task?.tags)
+      setState({
+        selectedTags: task.tags,
+      })
   }, [task])
-
-  if (!visible) return <></>
 
   return (
     <>
@@ -64,7 +86,6 @@ const NewTask = ({visible, task, onClose, isEditing}: Props) => {
           <TouchableOpacity
             onPress={() => {
               onClose()
-              setTitle('')
             }}
             style={{marginBottom: 10}}
           >
@@ -75,24 +96,31 @@ const NewTask = ({visible, task, onClose, isEditing}: Props) => {
             placeholder="New Task"
             value={title}
             placeholderTextColor={colors.gray_9C9DA2}
-            autoFocus={true}
             style={styles.txtInput}
+            autoFocus={true}
             returnKeyLabel="Save"
             returnKeyType="done"
             accessibilityRole="combobox"
           />
           <FlatList
-            data={task?.tags ?? []}
+            data={selectedTags}
             keyExtractor={(item) => String(item.id)}
             renderItem={({item}) => (
               <Tag
                 key={item.id}
                 name={item.name}
                 onDelete={() => {
-                  mutateTag.mutate({
-                    tagId: item.id,
-                    taskId: task?.id as string,
-                  })
+                  if (isEditing && task?.tags.includes(item))
+                    mutateTag.mutate({
+                      tagId: item.id,
+                      taskId: task?.id as string,
+                    })
+                  else
+                    setState({
+                      selectedTags: selectedTags.filter(
+                        (tag) => tag.id !== item.id,
+                      ),
+                    })
                 }}
               />
             )}
@@ -102,7 +130,15 @@ const NewTask = ({visible, task, onClose, isEditing}: Props) => {
             accessibilityLiveRegion="polite"
           />
           <View style={styles.buttonsContainer}>
-            <Button onPress={() => setShowAddTag(true)}>Add Tag</Button>
+            <Button
+              onPress={() =>
+                setState({
+                  selectTag: true,
+                })
+              }
+            >
+              Add Tag
+            </Button>
             <Button
               onPress={async () => {
                 if (isEditing) {
@@ -115,7 +151,9 @@ const NewTask = ({visible, task, onClose, isEditing}: Props) => {
                     task: {
                       title,
                     },
-                    tags: [],
+                    tags: selectedTags.map((tag) => ({
+                      tag_id: tag.id,
+                    })),
                   })
                 }
                 onClose()
@@ -124,9 +162,21 @@ const NewTask = ({visible, task, onClose, isEditing}: Props) => {
               Save
             </Button>
           </View>
+          {selectTag ? (
+            <SelectTags
+              selectedTags={selectedTags}
+              onClose={(selectedTags) => {
+                setState({
+                  selectTag: false,
+                  selectedTags,
+                })
+              }}
+            />
+          ) : (
+            <></>
+          )}
         </>
       </BottomSheet>
-      {showAddTag ? <SelectTag close={() => setShowAddTag(false)} /> : <></>}
     </>
   )
 }

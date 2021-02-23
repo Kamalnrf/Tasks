@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
   rootStyle: {
     flex: 1,
     justifyContent: 'flex-end',
+    backgroundColor: colors.black_000000C0,
   },
   dialogStye: {
     padding: 24,

@@ -58,10 +58,7 @@ const ActiveTask = ({title, startTime, tags, endTime, id, onEdit}: Props) => {
 
   return (
     <View style={styles.container}>
-      <TimeProgress
-        isTaskRunning={isTaskRunning}
-        startTime={isTaskRunning ? new Date(startTime as string) : null}
-      />
+      <TimeProgress isTaskRunning={isTaskRunning} startTime={startTime} />
       <View style={styles.taskDetailsContainer}>
         <Text style={styles.titleTxt}>{title}</Text>
         <FlatList

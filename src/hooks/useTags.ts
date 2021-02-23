@@ -1,11 +1,10 @@
 import {gql} from 'graphql-request'
 import {useMutation, useQuery, useQueryClient} from 'react-query'
 import graphQLClient from '../graphQLClient'
-import {Task} from '../types'
-import {useMutationTask} from './useTasks'
+import {Tag, Task} from '../types'
 
 const useTags = () => {
-  return useQuery('tasks', async () => {
+  return useQuery('tags', async () => {
     try {
       const {tags} = await graphQLClient.request(gql`
         query {
@@ -18,46 +17,12 @@ const useTags = () => {
 
       return {
         tags,
-      }
+      } as {tags: Array<Tag>}
     } catch (err: unknown) {
       return Promise.reject(err)
     }
   })
 }
-
-type DeleteTagArgs = {
-  taskId: string
-  tagId: string
-}
-
-/*
-mutation{
-  delete_task_tag(where: {
-    tag_id: {_eq: 882}
-    task_id: {_eq: 1302}
-  }){
-    affected_rows
-    returning {
-     	task_id
-      tag_id
-    }
-  }
-}
-
-{
-  "data": {
-    "delete_task_tag": {
-      "affected_rows": 1,
-      "returning": [
-        {
-          "task_id": 1302,
-          "tag_id": 882
-        }
-      ]
-    }
-  }
-}
-*/
 
 const useMutationDeleteTaskTag = () => {
   const queryClient = useQueryClient()

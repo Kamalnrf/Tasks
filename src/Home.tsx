@@ -38,8 +38,6 @@ const styles = StyleSheet.create({
 
 /*
  TODO
- [ ] - Create New Tag
- [ ] - Add time passed to timer
  [ ] - Add unit tests
   [ ] - Explore MSW with GraphQL
  [ ] - Add E2E Tests
@@ -112,17 +110,20 @@ const Home = () => {
           </Button>
         </View>
       </View>
-      <NewTask
-        visible={!!state.editingTaskId || state.createNewTask}
-        task={data?.tasks.find((task) => task.id === state.editingTaskId)}
-        isEditing={!!state.editingTaskId}
-        onClose={() =>
-          setState({
-            editingTaskId: undefined,
-            createNewTask: false,
-          })
-        }
-      />
+      {!!state.editingTaskId || state.createNewTask ? (
+        <NewTask
+          task={data?.tasks?.find((task) => task.id === state.editingTaskId)}
+          isEditing={!!state.editingTaskId}
+          onClose={() =>
+            setState({
+              editingTaskId: undefined,
+              createNewTask: false,
+            })
+          }
+        />
+      ) : (
+        <></>
+      )}
     </>
   )
 }

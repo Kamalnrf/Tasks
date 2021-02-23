@@ -100,7 +100,9 @@ const useMutationInsertTask = () => {
       tags,
     }: {
       task: Partial<Task>
-      tags: Array<Partial<Tag>>
+      tags: Array<{
+        tag_id: string
+      }>
     }) => {
       try {
         const data: {
@@ -112,10 +114,8 @@ const useMutationInsertTask = () => {
             insert_tasks(
               objects: {
                 title: "${title}"
-                ${
-                  tags.length > 0
-                    ? `task_tags: {data: ${JSON.stringify(tags)}}`
-                    : ''
+                task_tags: {
+                  data: ${JSON.stringify(tags).replace(/"([^(")"]+)":/g, '$1:')}
                 }
               }
             ) {

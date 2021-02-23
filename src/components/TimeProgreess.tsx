@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {StyleSheet} from 'react-native'
 import Animated, {
+  call,
   Easing,
   eq,
   multiply,
@@ -23,7 +24,7 @@ import Svg, {
 import {colors} from '../constants'
 
 type Props = {
-  startTime: Date | null
+  startTime: string | null
   isTaskRunning: boolean
 }
 
@@ -41,6 +42,15 @@ const circumference = r * 2 * Math.PI
 const cx = SIZE / 2
 const cy = SIZE / 2
 
+const getDiffMins = (time: string) => {
+  const startDate = new Date(time)
+  const currentDate = new Date()
+  const diffMs = Math.abs(startDate.getTime() - currentDate.getTime())
+  const diffMins = Math.round(((diffMs % 86400000) % 3600000) / 60000)
+
+  return diffMins
+}
+
 const TimeProgress = ({startTime, isTaskRunning}: Props) => {
   const progress = new Value(0)
   const α = multiply(sub(1, progress), Math.PI * 2)
@@ -48,14 +58,18 @@ const TimeProgress = ({startTime, isTaskRunning}: Props) => {
   const [timer, setTimer] = useState<number>(0)
 
   useCode(() => {
-    if (isTaskRunning)
+    if (isTaskRunning) {
       return [
         set(
           progress,
-          loop({easing: Easing.bezier(0.87, 0, 0.13, 1), duration: 6000}),
+          loop({easing: Easing.bezier(0.87, 0, 0.13, 1), duration: 60000}),
         ),
+        call([], () => {
+          setTimer(getDiffMins(startTime as string))
+        }),
       ]
-  }, [progress])
+    }
+  }, [progress, startTime])
 
   return (
     <Svg
@@ -99,17 +113,7 @@ const TimeProgress = ({startTime, isTaskRunning}: Props) => {
         }}
       />
       {isTaskRunning ? (
-        <></>
-      ) : (
-        <Line
-          x={cx}
-          y1={25}
-          y2={75}
-          stroke={colors.gray_9C9DA2}
-          strokeWidth="7"
-        />
-      )}
-      {/* <Text
+        <Text
           fill={colors.gray_9C9DA2}
           fontSize="30"
           x={cx}
@@ -121,8 +125,17 @@ const TimeProgress = ({startTime, isTaskRunning}: Props) => {
             originY: 50,
           }}
         >
-          {`${timer}s`}
-        </Text> */}
+          {`${timer === 0 ? '0' : timer}m`}
+        </Text>
+      ) : (
+        <Line
+          x={cx}
+          y1={25}
+          y2={75}
+          stroke={colors.gray_9C9DA2}
+          strokeWidth="7"
+        />
+      )}
     </Svg>
   )
 }
