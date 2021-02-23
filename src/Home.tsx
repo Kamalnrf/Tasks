@@ -4,6 +4,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {colors} from './constants'
 import ActiveTask from './components/ActiveTask'
 import NewTask from './components/NewTask'
+import useTasksAndTags from './hooks/useTasksAndTags'
 
 const styles = StyleSheet.create({
   container: {
@@ -44,21 +45,19 @@ const tasks = [
 
 const Home = () => {
   const {top, bottom} = useSafeAreaInsets()
+  const {data} = useTasksAndTags()
 
   return (
     <>
       <View style={[styles.container, {paddingTop: top}]}>
         <Text style={styles.title}>Tasks</Text>
         <FlatList
-          data={tasks}
-          keyExtractor={(item) => item.id}
-          renderItem={({item}) => (
-            <ActiveTask
-              title={item.title}
-              startTime={item.startTime}
-              endEnd={item.endTime}
-            />
-          )}
+          data={data?.tasks}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({item}) => <ActiveTask {...item} />}
+          ItemSeparatorComponent={() => <View style={{height: 20}} />}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => <Text>Create new task</Text>}
         />
         <View style={[styles.footer, {paddingBottom: bottom}]}>
           <Text style={styles.footerText}>Create Task</Text>

@@ -1,6 +1,7 @@
 import React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {colors} from '../constants'
+import {Task} from '../types'
 import Tag from './Tag'
 import TimeProgress from './TimeProgreess'
 
@@ -35,40 +36,63 @@ const styles = StyleSheet.create({
   },
 })
 
-type Props = {
-  title: string
-  startTime: Date
-  endEnd: Date
-  tags: Array<string>
+const _isTaskRunning = (endTime: string | null, startTime: string | null) => {
+  if (startTime && !endTime) return true
+  else if (Date.parse(endTime as string) > Date.parse(startTime as string))
+    return true
+  return false
 }
 
-const tags = ['first-task', 'delay-post-restar', 'bad', 'go']
+const ActiveTask = ({title, startTime, tags, endTime}: Task) => {
+  const isTaskRunning = _isTaskRunning(endTime, startTime)
 
-const ActiveTask = ({title, startTime}: Props) => (
-  <View style={styles.container}>
-    <TimeProgress startTime={startTime} />
-    <View style={styles.taskDetailsContainer}>
-      <Text style={styles.titleTxt}>{title}</Text>
-      <FlatList
-        data={tags}
-        keyExtractor={(item) => item}
-        renderItem={({item}) => <Tag key={item} name={item} />}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        style={{
-          marginRight: -20,
-        }}
+  return (
+    <View style={styles.container}>
+      <TimeProgress
+        isTaskRunning={isTaskRunning}
+        startTime={isTaskRunning ? new Date(startTime as string) : null}
       />
-      <View style={styles.buttonsContainer}>
-        <Text
-          style={[styles.buttonTxt, styles.buttonTxtLink, {paddingRight: 10}]}
-        >
-          Mark Completed
-        </Text>
-        <Text style={[styles.buttonTxt, styles.buttonTxtLink]}>Edit Task</Text>
+      <View style={styles.taskDetailsContainer}>
+        <Text style={styles.titleTxt}>{title}</Text>
+        <FlatList
+          data={tags}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({item}) => <Tag key={item.id} name={item.name} />}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          style={{
+            marginRight: -20,
+          }}
+        />
+        <View style={styles.buttonsContainer}>
+          {isTaskRunning ? (
+            <Text
+              style={[
+                styles.buttonTxt,
+                styles.buttonTxtLink,
+                {paddingRight: 10},
+              ]}
+            >
+              Stop Task
+            </Text>
+          ) : (
+            <Text
+              style={[
+                styles.buttonTxt,
+                styles.buttonTxtLink,
+                {paddingRight: 10},
+              ]}
+            >
+              Mark Completed
+            </Text>
+          )}
+          <Text style={[styles.buttonTxt, styles.buttonTxtLink]}>
+            Edit Task
+          </Text>
+        </View>
       </View>
     </View>
-  </View>
-)
+  )
+}
 
 export default ActiveTask

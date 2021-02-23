@@ -2,7 +2,9 @@ import React, {useState} from 'react'
 import {StyleSheet} from 'react-native'
 import Animated, {
   Easing,
+  eq,
   multiply,
+  not,
   set,
   sub,
   useCode,
@@ -21,7 +23,8 @@ import Svg, {
 import {colors} from '../constants'
 
 type Props = {
-  startTime: Date
+  startTime: Date | null
+  isTaskRunning: boolean
 }
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
@@ -37,23 +40,22 @@ const r = (SIZE - 10) / 2
 const circumference = r * 2 * Math.PI
 const cx = SIZE / 2
 const cy = SIZE / 2
-const startTime = new Date()
 
-const TimeProgress = ({}: Props) => {
+const TimeProgress = ({startTime, isTaskRunning}: Props) => {
   const progress = new Value(0)
   const α = multiply(sub(1, progress), Math.PI * 2)
   const strokeDashoffset = multiply(α, r)
   const [timer, setTimer] = useState<number>(0)
 
-  useCode(
-    () => [
-      set(
-        progress,
-        loop({easing: Easing.bezier(0.87, 0, 0.13, 1), duration: 6000}),
-      ),
-    ],
-    [progress],
-  )
+  useCode(() => {
+    if (isTaskRunning)
+      return [
+        set(
+          progress,
+          loop({easing: Easing.bezier(0.87, 0, 0.13, 1), duration: 6000}),
+        ),
+      ]
+  }, [progress])
 
   return (
     <Svg
@@ -96,8 +98,18 @@ const TimeProgress = ({}: Props) => {
           r,
         }}
       />
-      {timer ? (
-        <Text
+      {isTaskRunning ? (
+        <></>
+      ) : (
+        <Line
+          x={cx}
+          y1={25}
+          y2={75}
+          stroke={colors.gray_9C9DA2}
+          strokeWidth="7"
+        />
+      )}
+      {/* <Text
           fill={colors.gray_9C9DA2}
           fontSize="30"
           x={cx}
@@ -110,16 +122,7 @@ const TimeProgress = ({}: Props) => {
           }}
         >
           {`${timer}s`}
-        </Text>
-      ) : (
-        <Line
-          x={cx}
-          y1={25}
-          y2={75}
-          stroke={colors.gray_9C9DA2}
-          strokeWidth="10"
-        />
-      )}
+        </Text> */}
     </Svg>
   )
 }
