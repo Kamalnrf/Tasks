@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useReducer, useState} from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {colors} from './constants'
@@ -6,6 +6,7 @@ import ActiveTask from './components/ActiveTask'
 import NewTask from './components/NewTask'
 import Button from './components/Button'
 import {useTasks} from './hooks/useTasks'
+import {Task} from './types'
 
 const styles = StyleSheet.create({
   container: {
@@ -35,10 +36,34 @@ const styles = StyleSheet.create({
   },
 })
 
+/*
+ TODO
+ [ ] - Create New Task 
+ [ ] - Create New Tag
+ [ ] - Add time passed to timer
+ [ ] - Add unit tests
+  [ ] - Explore MSW with GraphQL
+ [ ] - Add E2E Tests
+ [ ] - Add Tasks Search
+ [ ] - Add Date Range Filter
+*/
+
+type State = {
+  editingTaskId: string | undefined
+  createNewTask: boolean
+}
+
+const initialState: State = {
+  editingTaskId: undefined,
+  createNewTask: false,
+}
+
 const Home = () => {
   const {top, bottom} = useSafeAreaInsets()
-  const {editTask, setEditTask} = useState(null)
-  const [isCreatingTask, setCreatingTask] = useState(false)
+  const [state, setState] = useReducer(
+    (s: State, a: Partial<State>) => ({...s, ...a}),
+    initialState,
+  )
   const {data} = useTasks()
 
   return (
@@ -48,16 +73,43 @@ const Home = () => {
         <FlatList
           data={data?.tasks}
           keyExtractor={(item) => String(item.id)}
-          renderItem={({item}) => <ActiveTask {...item} />}
+          renderItem={({item}) => (
+            <ActiveTask
+              {...item}
+              onEdit={() =>
+                setState({
+                  editingTaskId: item.id,
+                })
+              }
+            />
+          )}
           ItemSeparatorComponent={() => <View style={{height: 20}} />}
           showsVerticalScrollIndicator={false}
-          ListEmptyComponent={() => <Text>Create new task</Text>}
+          ListEmptyComponent={() => (
+            <Button
+              onPress={() => {}}
+              textStyle={{
+                alignSelf: 'center',
+                fontSize: 20,
+              }}
+            >
+              Create new task +
+            </Button>
+          )}
         />
         <View style={[styles.footer, {paddingBottom: bottom}]}>
           <Button onPress={() => {}}>Create Task</Button>
         </View>
       </View>
-      <NewTask visible={isCreatingTask || editTask} />
+      <NewTask
+        visible={!!state.editingTaskId || state.createNewTask}
+        task={data?.tasks.find((task) => task.id === state.editingTaskId)}
+        onClose={() =>
+          setState({
+            editingTaskId: undefined,
+          })
+        }
+      />
     </>
   )
 }

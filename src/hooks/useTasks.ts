@@ -6,7 +6,11 @@ import {Task} from '../types'
 const useTasks = () => {
   return useQuery('tasks', async () => {
     try {
-      const {tasks} = await graphQLClient.request(gql`
+      const {
+        tasks,
+      }: {
+        tasks: Array<Task>
+      } = await graphQLClient.request(gql`
         query {
           tasks {
             id

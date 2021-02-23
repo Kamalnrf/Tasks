@@ -47,7 +47,11 @@ const _isTaskRunning = (endTime: string | null, startTime: string | null) => {
   return true
 }
 
-const ActiveTask = ({title, startTime, tags, endTime, id}: Task) => {
+type Props = Task & {
+  onEdit: () => void
+}
+
+const ActiveTask = ({title, startTime, tags, endTime, id, onEdit}: Props) => {
   const isTaskRunning = _isTaskRunning(endTime, startTime)
   const {mutate} = useMutationTask()
   const tagMutation = useMutationDeleteTaskTag()
@@ -98,7 +102,7 @@ const ActiveTask = ({title, startTime, tags, endTime, id}: Task) => {
               Start Task
             </Button>
           )}
-          <Button onPress={() => {}}>Edit Task</Button>
+          <Button onPress={onEdit}>Edit Task</Button>
         </View>
       </View>
     </View>
