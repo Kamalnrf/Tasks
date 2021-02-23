@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {colors} from './constants'
 import ActiveTask from './components/ActiveTask'
 import NewTask from './components/NewTask'
-import useTasksAndTags from './hooks/useTasksAndTags'
+import Button from './components/Button'
+import {useTasks} from './hooks/useTasks'
 
 const styles = StyleSheet.create({
   container: {
@@ -34,18 +35,11 @@ const styles = StyleSheet.create({
   },
 })
 
-const tasks = [
-  {
-    title: 'Task Title',
-    startTime: new Date(),
-    endTime: new Date(),
-    id: '1',
-  },
-]
-
 const Home = () => {
   const {top, bottom} = useSafeAreaInsets()
-  const {data} = useTasksAndTags()
+  const {editTask, setEditTask} = useState(null)
+  const [isCreatingTask, setCreatingTask] = useState(false)
+  const {data} = useTasks()
 
   return (
     <>
@@ -60,10 +54,10 @@ const Home = () => {
           ListEmptyComponent={() => <Text>Create new task</Text>}
         />
         <View style={[styles.footer, {paddingBottom: bottom}]}>
-          <Text style={styles.footerText}>Create Task</Text>
+          <Button onPress={() => {}}>Create Task</Button>
         </View>
       </View>
-      <NewTask visible={false} />
+      <NewTask visible={isCreatingTask || editTask} />
     </>
   )
 }

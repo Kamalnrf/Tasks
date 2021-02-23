@@ -1,7 +1,10 @@
 import React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {colors} from '../constants'
+import {useMutationDeleteTaskTag} from '../hooks/useTags'
+import {useMutationTask} from '../hooks/useTasks'
 import {Task} from '../types'
+import Button from './Button'
 import Tag from './Tag'
 import TimeProgress from './TimeProgreess'
 
@@ -37,14 +40,17 @@ const styles = StyleSheet.create({
 })
 
 const _isTaskRunning = (endTime: string | null, startTime: string | null) => {
-  if (startTime && !endTime) return true
-  else if (Date.parse(endTime as string) > Date.parse(startTime as string))
-    return true
-  return false
+  if (startTime === null) return false
+  if (Date.parse(endTime as string) > Date.parse(startTime as string))
+    return false
+
+  return true
 }
 
-const ActiveTask = ({title, startTime, tags, endTime}: Task) => {
+const ActiveTask = ({title, startTime, tags, endTime, id}: Task) => {
   const isTaskRunning = _isTaskRunning(endTime, startTime)
+  const {mutate} = useMutationTask()
+  const tagMutation = useMutationDeleteTaskTag()
 
   return (
     <View style={styles.container}>
@@ -66,29 +72,33 @@ const ActiveTask = ({title, startTime, tags, endTime}: Task) => {
         />
         <View style={styles.buttonsContainer}>
           {isTaskRunning ? (
-            <Text
-              style={[
-                styles.buttonTxt,
-                styles.buttonTxtLink,
-                {paddingRight: 10},
-              ]}
-            >
-              Stop Task
-            </Text>
-          ) : (
-            <Text
-              style={[
-                styles.buttonTxt,
-                styles.buttonTxtLink,
-                {paddingRight: 10},
-              ]}
+            <Button
+              onPress={() => {
+                mutate({
+                  endTime: new Date().toISOString(),
+                  startTime,
+                  title,
+                  id,
+                })
+              }}
             >
               Mark Completed
-            </Text>
+            </Button>
+          ) : (
+            <Button
+              onPress={() => {
+                mutate({
+                  endTime,
+                  startTime: new Date().toISOString(),
+                  title,
+                  id,
+                })
+              }}
+            >
+              Start Task
+            </Button>
           )}
-          <Text style={[styles.buttonTxt, styles.buttonTxtLink]}>
-            Edit Task
-          </Text>
+          <Button onPress={() => {}}>Edit Task</Button>
         </View>
       </View>
     </View>
