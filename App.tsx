@@ -12,6 +12,7 @@ import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from 'react-native-safe-area-context'
+import AppProvider from './src/providers'
 
 const fonts = {
   Roboto_400Regular,
@@ -25,9 +26,11 @@ export default function App() {
   if (!fontsLoaded) return <AppLoading />
 
   return (
-    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <StatusBar backgroundColor="#212227" style="light" />
-      <Home />
-    </SafeAreaProvider>
+    <AppProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+        <StatusBar backgroundColor="#212227" style="light" />
+        <Home />
+      </SafeAreaProvider>
+    </AppProvider>
   )
 }
