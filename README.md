@@ -1,7 +1,6 @@
 ## ☑️ Tasks
 
-An Assignment for Swiggy Interview. I also did the design for this app myself
-and you can find it
+I also did the design for this app myself and you can find it
 [here](https://www.figma.com/file/Wr8rnyLmGNdQ8h3JidKJQD/Swiggy-Assignment?node-id=0%3A1).
 
 ## How to run the project
