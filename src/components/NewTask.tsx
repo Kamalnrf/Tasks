@@ -130,15 +130,19 @@ const NewTask = ({task, onClose, isEditing}: Props) => {
             accessibilityLiveRegion="polite"
           />
           <View style={styles.buttonsContainer}>
-            <Button
-              onPress={() =>
-                setState({
-                  selectTag: true,
-                })
-              }
-            >
-              Add Tag
-            </Button>
+            {isEditing ? (
+              <></>
+            ) : (
+              <Button
+                onPress={() =>
+                  setState({
+                    selectTag: true,
+                  })
+                }
+              >
+                Add Tag
+              </Button>
+            )}
             <Button
               onPress={async () => {
                 if (isEditing) {
