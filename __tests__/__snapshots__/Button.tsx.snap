@@ -41,6 +41,7 @@ exports[`Test Button should render button with given text and to be tapable 1`] 
             "paddingRight": 10,
           },
           undefined,
+          Object {},
         ]
       }
     >

@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, StyleSheet, Text, View} from 'react-native'
+import {FlatList, StyleSheet, Text, View, TouchableOpacity} from 'react-native'
 import {colors} from '../constants'
 import {useMutationTask} from '../hooks/useTasks'
 import {Task} from '../types'
@@ -40,8 +40,7 @@ const styles = StyleSheet.create({
 
 const _isTaskRunning = (endTime: string | null, startTime: string | null) => {
   if (startTime === null) return false
-  if (Date.parse(endTime as string) > Date.parse(startTime as string))
-    return false
+  if (Date.parse(endTime as string) > Date.parse(startTime)) return false
 
   return true
 }
@@ -54,9 +53,32 @@ const ActiveTask = ({title, startTime, tags, endTime, id, onEdit}: Props) => {
   const isTaskRunning = _isTaskRunning(endTime, startTime)
   const {mutate} = useMutationTask()
 
+  const startTask = () =>
+    mutate({
+      endTime,
+      startTime: new Date().toISOString(),
+      title,
+      id,
+    })
+
+  const stopTask = () =>
+    mutate({
+      endTime: new Date().toISOString(),
+      startTime,
+      title,
+      id,
+    })
+
   return (
     <View style={styles.container}>
-      <TimeProgress isTaskRunning={isTaskRunning} startTime={startTime} />
+      <TouchableOpacity
+        onPress={() => {
+          if (isTaskRunning) stopTask()
+          else startTask()
+        }}
+      >
+        <TimeProgress isTaskRunning={isTaskRunning} startTime={startTime} />
+      </TouchableOpacity>
       <View style={styles.taskDetailsContainer}>
         <Text style={styles.titleTxt}>{title}</Text>
         <FlatList
@@ -71,31 +93,9 @@ const ActiveTask = ({title, startTime, tags, endTime, id, onEdit}: Props) => {
         />
         <View style={styles.buttonsContainer}>
           {isTaskRunning ? (
-            <Button
-              onPress={() => {
-                mutate({
-                  endTime: new Date().toISOString(),
-                  startTime,
-                  title,
-                  id,
-                })
-              }}
-            >
-              Mark Completed
-            </Button>
+            <Button onPress={stopTask}>Mark Completed</Button>
           ) : (
-            <Button
-              onPress={() => {
-                mutate({
-                  endTime,
-                  startTime: new Date().toISOString(),
-                  title,
-                  id,
-                })
-              }}
-            >
-              Start Task
-            </Button>
+            <Button onPress={startTask}>Start Task</Button>
           )}
           <Button onPress={onEdit}>Edit Task</Button>
         </View>

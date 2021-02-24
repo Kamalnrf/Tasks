@@ -55,7 +55,11 @@ const SelectTags = (props: Props) => {
   const {data} = useTags()
 
   return (
-    <BottomSheet>
+    <BottomSheet
+      onClose={() => {
+        props.onClose(selectedTags)
+      }}
+    >
       <View style={{height}}>
         <TouchableOpacity onPress={() => props.onClose(selectedTags)}>
           <ArrowLeft />
@@ -74,7 +78,9 @@ const SelectTags = (props: Props) => {
         <FlatList
           data={
             searchText.length > 0
-              ? data?.tags.filter((tag) => tag.name.includes(searchText))
+              ? data?.tags.filter((tag) =>
+                  tag.name.toLowerCase().includes(searchText.toLowerCase()),
+                )
               : data?.tags
           }
           keyExtractor={(item) => String(item.id)}

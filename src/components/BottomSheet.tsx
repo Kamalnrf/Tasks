@@ -26,15 +26,21 @@ const styles = StyleSheet.create({
 type Props = {
   children: ReactNode
   testId?: string
+  onClose: () => {}
 }
 
-const BottomSheet = ({children, testId}: Props) => {
+const BottomSheet = ({children, testId, onClose}: Props) => {
   const {bottom} = useSafeAreaInsets()
 
   const KeyboardView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
   return (
-    <Modal testID={testId} transparent animationType="slide">
+    <Modal
+      testID={testId}
+      transparent
+      animationType="slide"
+      onRequestClose={onClose}
+    >
       <View style={[styles.rootStyle, {paddingBottom: bottom}]}>
         <KeyboardView behavior="padding" style={styles.dialogStye}>
           {children}

@@ -15,6 +15,7 @@ type Props = AccessibilityProps & {
   onPress: () => void
   containerStyle?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
+  disabled: boolean
 }
 
 const styles = StyleSheet.create({
@@ -33,15 +34,25 @@ const Button = ({
   children,
   onPress,
   textStyle,
+  disabled,
   ...props
 }: Props) => (
   <TouchableOpacity
     style={containerStyle}
     onPress={onPress}
     accessibilityRole="button"
+    disabled={disabled}
     {...props}
   >
-    <Text style={[styles.txt, textStyle]}>{children}</Text>
+    <Text
+      style={[
+        styles.txt,
+        textStyle,
+        disabled ? {color: colors.gray_9C9DA2} : {},
+      ]}
+    >
+      {children}
+    </Text>
   </TouchableOpacity>
 )
 

@@ -1,5 +1,5 @@
 import React, {useEffect, useReducer, useState} from 'react'
-import {FlatList, StyleSheet, View, TextInput} from 'react-native'
+import {FlatList, StyleSheet, View, TextInput, Platform} from 'react-native'
 import {colors} from '../constants'
 import {Tag as TTag, Task} from '../types'
 import BottomSheet from './BottomSheet'
@@ -68,15 +68,19 @@ const NewTask = ({task, onClose, isEditing}: Props) => {
   }, [task])
 
   return (
-    <BottomSheet testId="new-task'">
-      <TouchableOpacity
-        onPress={() => {
-          onClose()
-        }}
-        style={{marginBottom: 10}}
-      >
-        <ArrowLeft />
-      </TouchableOpacity>
+    <BottomSheet testId="new-task'" onClose={onClose}>
+      {Platform.OS === 'ios' ? (
+        <TouchableOpacity
+          onPress={() => {
+            onClose()
+          }}
+          style={{marginBottom: 10}}
+        >
+          <ArrowLeft />
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
       <TextInput
         onChangeText={setTitle}
         placeholder="New Task"
@@ -148,6 +152,7 @@ const NewTask = ({task, onClose, isEditing}: Props) => {
             }
             onClose()
           }}
+          disabled={!(title.length > 0)}
         >
           Save
         </Button>

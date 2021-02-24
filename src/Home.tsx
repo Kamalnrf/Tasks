@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react'
+import React, {useReducer} from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {colors} from './constants'
@@ -6,7 +6,6 @@ import ActiveTask from './components/ActiveTask'
 import NewTask from './components/NewTask'
 import Button from './components/Button'
 import {useTasks} from './hooks/useTasks'
-import {Task} from './types'
 
 const styles = StyleSheet.create({
   container: {
@@ -38,8 +37,6 @@ const styles = StyleSheet.create({
 
 /*
  TODO
- [ ] - Add unit tests
-  [ ] - Explore MSW with GraphQL
  [ ] - Add E2E Tests
  [ ] - Add Tasks Search
  [ ] - Add Date Range Filter

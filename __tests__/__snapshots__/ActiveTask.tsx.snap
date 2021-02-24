@@ -22,142 +22,159 @@ exports[`Test Active Task should trigger onEdit on tapping edit task 1`] = `
       }
     }
   >
-    <RNSVGSvgView
-      accessibilityRole="progressbar"
-      bbHeight={100}
-      bbWidth={100}
-      focusable={false}
-      height={100}
+    <View
+      accessible={true}
+      focusable={true}
+      onClick={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
       style={
-        Array [
-          Object {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          Object {
-            "transform": Array [
-              Object {
-                "rotateZ": "270deg",
-              },
-            ],
-          },
-          Object {
-            "flex": 0,
-            "height": 100,
-            "width": 100,
-          },
-        ]
+        Object {
+          "opacity": 1,
+        }
       }
-      width={100}
     >
-      <RNSVGGroup
-        matrix={
+      <RNSVGSvgView
+        accessibilityRole="progressbar"
+        bbHeight={100}
+        bbWidth={100}
+        focusable={false}
+        height={100}
+        style={
           Array [
-            1,
-            0,
-            0,
-            1,
-            0,
-            0,
+            Object {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            Object {
+              "transform": Array [
+                Object {
+                  "rotateZ": "270deg",
+                },
+              ],
+            },
+            Object {
+              "flex": 0,
+              "height": 100,
+              "width": 100,
+            },
           ]
         }
+        width={100}
       >
-        <RNSVGDefs>
-          <RNSVGLinearGradient
-            gradient={
-              Array [
-                0,
-                -16752474,
-                1,
-                -16734567,
-              ]
-            }
-            gradientTransform={null}
-            gradientUnits={0}
-            name="grad1"
-            x1="0%"
-            x2="100%"
-            y1="0%"
-            y2="0%"
-          />
-          <RNSVGClipPath
-            name="clip"
-          >
-            <RNSVGCircle
-              cx="50%"
-              cy="50%"
-              r={41}
-            />
-          </RNSVGClipPath>
-        </RNSVGDefs>
-        <RNSVGCircle
-          cx={50}
-          cy={50}
-          propList={
-            Array [
-              "stroke",
-              "strokeWidth",
-            ]
-          }
-          r={45}
-          stroke={4288454050}
-          strokeWidth="10"
-        />
-        <RNSVGCircle
-          cx={50}
-          cy={50}
-          propList={
-            Array [
-              "stroke",
-              "strokeWidth",
-              "strokeDasharray",
-              "strokeDashoffset",
-              "strokeLinecap",
-            ]
-          }
-          r={45}
-          stroke={
-            Array [
-              1,
-              "grad1",
-            ]
-          }
-          strokeDasharray={
-            Array [
-              "282.7433388230814",
-              "282.7433388230814",
-            ]
-          }
-          strokeDashoffset={0}
-          strokeLinecap={1}
-          strokeWidth="10"
-        />
-        <RNSVGLine
+        <RNSVGGroup
           matrix={
             Array [
               1,
               0,
-              -0,
+              0,
               1,
-              50,
+              0,
               0,
             ]
           }
-          propList={
-            Array [
-              "stroke",
-              "strokeWidth",
-            ]
-          }
-          stroke={4288454050}
-          strokeWidth="7"
-          x1={0}
-          x2={0}
-          y1={25}
-          y2={75}
-        />
-      </RNSVGGroup>
-    </RNSVGSvgView>
+        >
+          <RNSVGDefs>
+            <RNSVGLinearGradient
+              gradient={
+                Array [
+                  0,
+                  -16752474,
+                  1,
+                  -16734567,
+                ]
+              }
+              gradientTransform={null}
+              gradientUnits={0}
+              name="grad1"
+              x1="0%"
+              x2="100%"
+              y1="0%"
+              y2="0%"
+            />
+            <RNSVGClipPath
+              name="clip"
+            >
+              <RNSVGCircle
+                cx="50%"
+                cy="50%"
+                r={41}
+              />
+            </RNSVGClipPath>
+          </RNSVGDefs>
+          <RNSVGCircle
+            cx={50}
+            cy={50}
+            propList={
+              Array [
+                "stroke",
+                "strokeWidth",
+              ]
+            }
+            r={45}
+            stroke={4288454050}
+            strokeWidth="10"
+          />
+          <RNSVGCircle
+            cx={50}
+            cy={50}
+            propList={
+              Array [
+                "stroke",
+                "strokeWidth",
+                "strokeDasharray",
+                "strokeDashoffset",
+                "strokeLinecap",
+              ]
+            }
+            r={45}
+            stroke={
+              Array [
+                1,
+                "grad1",
+              ]
+            }
+            strokeDasharray={
+              Array [
+                "282.7433388230814",
+                "282.7433388230814",
+              ]
+            }
+            strokeDashoffset={0}
+            strokeLinecap={1}
+            strokeWidth="10"
+          />
+          <RNSVGLine
+            matrix={
+              Array [
+                1,
+                0,
+                -0,
+                1,
+                50,
+                0,
+              ]
+            }
+            propList={
+              Array [
+                "stroke",
+                "strokeWidth",
+              ]
+            }
+            stroke={4288454050}
+            strokeWidth="7"
+            x1={0}
+            x2={0}
+            y1={25}
+            y2={75}
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
+    </View>
     <View
       style={
         Object {
@@ -248,6 +265,7 @@ exports[`Test Active Task should trigger onEdit on tapping edit task 1`] = `
                   "paddingRight": 10,
                 },
                 undefined,
+                Object {},
               ]
             }
           >
@@ -283,6 +301,7 @@ exports[`Test Active Task should trigger onEdit on tapping edit task 1`] = `
                   "paddingRight": 10,
                 },
                 undefined,
+                Object {},
               ]
             }
           >
