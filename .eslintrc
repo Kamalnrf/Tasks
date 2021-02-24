@@ -11,7 +11,8 @@
     "react-native/no-inline-styles": 2,
     "react-native/no-color-literals": 2,
     "react-native/no-raw-text": 2,
-    "react-native/no-single-element-style-arrays": 2
+    "react-native/no-single-element-style-arrays": 2,
+    "@typescript-eslint/unbound-method": 0
   },
   "parserOptions": {
     "project": "./tsconfig.json",

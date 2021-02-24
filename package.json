@@ -52,6 +52,15 @@
   },
   "jest": {
     "preset": "jest-expo",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node",
+      "svg"
+    ],
     "setupFiles": [
       "./node_modules/react-native-gesture-handler/jestSetup.js",
       "./jestSetup.js"
