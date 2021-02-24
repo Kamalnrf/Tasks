@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 type Props = {
   children: ReactNode
   testId?: string
-  onClose: () => {}
+  onClose?: () => {}
 }
 
 const BottomSheet = ({children, testId, onClose}: Props) => {

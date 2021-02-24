@@ -15,7 +15,7 @@ type Props = AccessibilityProps & {
   onPress: () => void
   containerStyle?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
-  disabled: boolean
+  disabled?: boolean
 }
 
 const styles = StyleSheet.create({
