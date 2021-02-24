@@ -1,5 +1,4 @@
 import React from 'react'
-import {exp} from 'react-native-reanimated'
 import ActiveTask from '../src/components/ActiveTask'
 import {Task} from '../src/types'
 import {generateTask} from '../testUtils/generators'
@@ -36,7 +35,7 @@ describe('Test Active Task', () => {
     expect(queryByText(_props.title)).not.toBeNull()
   })
 
-  it('should render edit task bottom sheet with existing data', () => {
+  it('should trigger onEdit on tapping edit task', () => {
     const _props = props({
       startTime: null,
       endTime: null,

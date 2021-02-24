@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test Button should render button with given text and to be tapable 1`] = `
+<RNCSafeAreaProvider
+  onInsetsChange={[Function]}
+  style={
+    Array [
+      Object {
+        "flex": 1,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    accessibilityRole="button"
+    accessible={true}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      Object {
+        "opacity": 1,
+      }
+    }
+  >
+    <Text
+      style={
+        Array [
+          Object {
+            "alignSelf": "flex-end",
+            "color": "#92A9EC",
+            "fontFamily": "Roboto_400Regular",
+            "fontSize": 15,
+            "lineHeight": 46,
+            "paddingRight": 10,
+          },
+          undefined,
+        ]
+      }
+    >
+      Test Button
+    </Text>
+  </View>
+</RNCSafeAreaProvider>
+`;

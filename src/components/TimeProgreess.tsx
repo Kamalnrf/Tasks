@@ -3,9 +3,7 @@ import {StyleSheet} from 'react-native'
 import Animated, {
   call,
   Easing,
-  eq,
   multiply,
-  not,
   set,
   sub,
   useCode,

@@ -1,23 +1,11 @@
 import React, {useEffect, useReducer, useState} from 'react'
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Keyboard,
-} from 'react-native'
+import {FlatList, StyleSheet, View, TextInput} from 'react-native'
 import {colors} from '../constants'
 import {Tag as TTag, Task} from '../types'
 import BottomSheet from './BottomSheet'
-import SelectTag from './SelectTags'
 import ArrowLeft from '../../assets/arrow-left.svg'
 import {TouchableOpacity} from 'react-native-gesture-handler'
-import {
-  useMutationInsertTask,
-  useMutationTask,
-  useTasks,
-} from '../hooks/useTasks'
+import {useMutationInsertTask, useMutationTask} from '../hooks/useTasks'
 import Button from './Button'
 import {useMutationDeleteTaskTag} from '../hooks/useTags'
 import SelectTags from './SelectTags'
@@ -80,108 +68,104 @@ const NewTask = ({task, onClose, isEditing}: Props) => {
   }, [task])
 
   return (
-    <>
-      <BottomSheet>
-        <>
-          <TouchableOpacity
-            onPress={() => {
-              onClose()
-            }}
-            style={{marginBottom: 10}}
-          >
-            <ArrowLeft />
-          </TouchableOpacity>
-          <TextInput
-            onChangeText={setTitle}
-            placeholder="New Task"
-            value={title}
-            placeholderTextColor={colors.gray_9C9DA2}
-            style={styles.txtInput}
-            autoFocus={true}
-            returnKeyLabel="Save"
-            returnKeyType="done"
-            accessibilityRole="combobox"
-          />
-          <FlatList
-            data={selectedTags}
-            keyExtractor={(item) => String(item.id)}
-            renderItem={({item}) => (
-              <Tag
-                key={item.id}
-                name={item.name}
-                onDelete={() => {
-                  if (isEditing && task?.tags.includes(item))
-                    mutateTag.mutate({
-                      tagId: item.id,
-                      taskId: task?.id as string,
-                    })
-                  else
-                    setState({
-                      selectedTags: selectedTags.filter(
-                        (tag) => tag.id !== item.id,
-                      ),
-                    })
-                }}
-              />
-            )}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            style={{marginTop: 10}}
-            accessibilityLiveRegion="polite"
-          />
-          <View style={styles.buttonsContainer}>
-            {isEditing ? (
-              <></>
-            ) : (
-              <Button
-                onPress={() =>
-                  setState({
-                    selectTag: true,
-                  })
-                }
-              >
-                Add Tag
-              </Button>
-            )}
-            <Button
-              onPress={async () => {
-                if (isEditing) {
-                  await mutateTask.mutateAsync({
-                    ...task,
-                    title,
-                  })
-                } else {
-                  await mutateInsertTask.mutateAsync({
-                    task: {
-                      title,
-                    },
-                    tags: selectedTags.map((tag) => ({
-                      tag_id: tag.id,
-                    })),
-                  })
-                }
-                onClose()
-              }}
-            >
-              Save
-            </Button>
-          </View>
-          {selectTag ? (
-            <SelectTags
-              selectedTags={selectedTags}
-              onClose={(selectedTags) => {
-                setState({
-                  selectTag: false,
-                  selectedTags,
+    <BottomSheet testId="new-task'">
+      <TouchableOpacity
+        onPress={() => {
+          onClose()
+        }}
+        style={{marginBottom: 10}}
+      >
+        <ArrowLeft />
+      </TouchableOpacity>
+      <TextInput
+        onChangeText={setTitle}
+        placeholder="New Task"
+        value={title}
+        placeholderTextColor={colors.gray_9C9DA2}
+        style={styles.txtInput}
+        autoFocus={true}
+        returnKeyLabel="Save"
+        returnKeyType="done"
+        accessibilityLabel={`Task Title ${title}`}
+      />
+      <FlatList
+        data={selectedTags}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({item}) => (
+          <Tag
+            key={item.id}
+            name={item.name}
+            onDelete={() => {
+              if (isEditing && task?.tags.includes(item))
+                mutateTag.mutate({
+                  tagId: item.id,
+                  taskId: task?.id as string,
                 })
-              }}
-            />
-          ) : (
-            <></>
-          )}
-        </>
-      </BottomSheet>
-    </>
+              else
+                setState({
+                  selectedTags: selectedTags.filter(
+                    (tag) => tag.id !== item.id,
+                  ),
+                })
+            }}
+          />
+        )}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        style={{marginTop: 10}}
+        accessibilityLiveRegion="polite"
+      />
+      <View style={styles.buttonsContainer}>
+        {isEditing ? (
+          <></>
+        ) : (
+          <Button
+            onPress={() =>
+              setState({
+                selectTag: true,
+              })
+            }
+          >
+            Add Tag
+          </Button>
+        )}
+        <Button
+          onPress={async () => {
+            if (isEditing) {
+              await mutateTask.mutateAsync({
+                ...task,
+                title,
+              })
+            } else {
+              await mutateInsertTask.mutateAsync({
+                task: {
+                  title,
+                },
+                tags: selectedTags.map((tag) => ({
+                  tag_id: tag.id,
+                })),
+              })
+            }
+            onClose()
+          }}
+        >
+          Save
+        </Button>
+      </View>
+      {selectTag ? (
+        <SelectTags
+          selectedTags={selectedTags}
+          onClose={(selectedTags) => {
+            setState({
+              selectTag: false,
+              selectedTags,
+            })
+          }}
+        />
+      ) : (
+        <></>
+      )}
+    </BottomSheet>
   )
 }
 

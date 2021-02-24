@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {
   KeyboardAvoidingView,
   Modal,
@@ -24,16 +24,17 @@ const styles = StyleSheet.create({
 })
 
 type Props = {
-  children: JSX.Element
+  children: ReactNode
+  testId?: string
 }
 
-const BottomSheet = ({children}: Props) => {
+const BottomSheet = ({children, testId}: Props) => {
   const {bottom} = useSafeAreaInsets()
 
   const KeyboardView = Platform.OS === 'ios' ? KeyboardAvoidingView : View
 
   return (
-    <Modal transparent animationType="slide">
+    <Modal testID={testId} transparent animationType="slide">
       <View style={[styles.rootStyle, {paddingBottom: bottom}]}>
         <KeyboardView behavior="padding" style={styles.dialogStye}>
           {children}

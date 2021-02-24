@@ -1,7 +1,6 @@
 import React from 'react'
 import {FlatList, StyleSheet, Text, View} from 'react-native'
 import {colors} from '../constants'
-import {useMutationDeleteTaskTag} from '../hooks/useTags'
 import {useMutationTask} from '../hooks/useTasks'
 import {Task} from '../types'
 import Button from './Button'
@@ -54,7 +53,6 @@ type Props = Task & {
 const ActiveTask = ({title, startTime, tags, endTime, id, onEdit}: Props) => {
   const isTaskRunning = _isTaskRunning(endTime, startTime)
   const {mutate} = useMutationTask()
-  const tagMutation = useMutationDeleteTaskTag()
 
   return (
     <View style={styles.container}>
